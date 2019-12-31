@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4.10"
-tokio = "0.1.22"
+tokio = { version = "0.2.6", features = ["full"] }
 native-tls = "0.2.3"
 htmlescape="0.3.1"
 imap = "1.0.2"

@@ -223,8 +223,9 @@ extern crate sxd_document;
 extern crate sxd_xpath;
 extern crate postgres;
 
-use tokio::prelude::*;
-use tokio::timer::Interval;
+use tokio::process::Command;
+use tokio::task;
+use tokio::time;
 use std::time::{Duration, Instant};
 use sxd_document::parser;
 use sxd_xpath::{Factory, Context, Value};
@@ -237,16 +238,20 @@ const DOMAIN:&str = "imap.gmail.com";
 const EMAIL:&str = "mav.facturas.com@gmail.com";
 const PASSWORD:&str = "sf1ct5r1";
 
-fn main() {
-    let task = Interval::new(Instant::now(), Duration::from_millis(5000))
-        .for_each(|instant| {
-            imap_io();
-            println!("fire; instant={:?}", instant);
-            Ok(())
-        })
-        .map_err(|e| panic!("interval errored; err={:?}", e));
+#[tokio::main]
+async fn main() -> Result<(), std::io::Error> {
+    let imap_interval = task::spawn(imap_interval());
+    imap_interval.await??;
+    Ok(())
+}
 
-    tokio::run(task);
+async fn imap_interval() -> Result<(), std::io::Error> {
+    let mut interval = time::interval(Duration::from_secs(1));
+    loop {
+        imap_io();
+        interval.tick().await;
+        Command::new("date").spawn()?.await?;
+    }
 }
 
 fn imap_io() {
@@ -275,11 +280,11 @@ fn imap_io() {
                     return ();
                 };
                 let body = message.body().expect("message did not have a body!");
-                println!("{:#?}",std::str::from_utf8(&body)) ;
                 let parsed = mailparse::parse_mail(body).unwrap();
                 for part in &parsed.subparts {
                     if part.ctype.mimetype == "text/xml" {
                         let body = part.get_body().unwrap();
+                        println!("{:#?}",&body);
                         let package = parser::parse(&body)
                             .expect("<root>No XML</root>");
                         let document = package.as_document();
