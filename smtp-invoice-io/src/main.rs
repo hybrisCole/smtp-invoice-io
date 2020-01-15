@@ -1,3 +1,6 @@
+#[macro_use(bson, doc)]
+extern crate bson;
+
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
@@ -24,8 +27,9 @@ use async_std::prelude::*;
 use async_std::stream;
 use async_std::task;
 
-mod structs;
+mod database;
 mod imap_unseen;
+mod structs;
 mod xml_invoice;
 
 fn main() -> io::Result<()> {
@@ -38,6 +42,10 @@ fn main() -> io::Result<()> {
                     match xml_invoice::process(&list).await {
                         Ok(invoice_list) => {
                             println!("{:#?}", invoice_list);
+                            let invoice_list = invoice_list.0;
+                            if (invoice_list.len() > 0){
+                                database::insert_many_factura(invoice_list).await.expect("Error With Sample DB fn");
+                            }
                         }
                         Err(e) => println!("Error getting xml invoices: {}", e),
                     }

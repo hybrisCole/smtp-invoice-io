@@ -1,4 +1,4 @@
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 struct Impuesto {
     Codigo: String,
     CodigoTarifa: String,
@@ -6,19 +6,19 @@ struct Impuesto {
     Monto: String,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 struct CodigoComercial {
     Tipo: String,
     Codigo: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Identificacion {
     Tipo: String,
     Numero: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Ubicacion {
     Provincia: String,
     Canton: String,
@@ -26,26 +26,26 @@ struct Ubicacion {
     OtrasSenas: String,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 struct Telefono {
     CodigoPais: String,
     NumTelefono: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct CodigoTipoMoneda {
     CodigoMoneda: String,
     TipoCambio: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct OtroTexto {
     #[serde(rename = "$value", default)]
     Body: String,
     codigo: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Emisor {
     Nombre: String,
     Identificacion: Identificacion,
@@ -54,19 +54,21 @@ struct Emisor {
     Ubicacion: Ubicacion,
     #[serde(default)]
     Telefono: Telefono,
+    #[serde(default)]
     CorreoElectronico: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Receptor {
     Nombre: String,
     Identificacion: Identificacion,
     #[serde(default)]
     Telefono: Telefono,
+    #[serde(default)]
     CorreoElectronico: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct MensajeHacienda {
     Clave: String,
     NombreEmisor: String,
@@ -82,7 +84,7 @@ pub struct MensajeHacienda {
     TotalFactura: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FacturaElectronica {
     Clave: String,
     CodigoActividad: String,
@@ -98,12 +100,12 @@ pub struct FacturaElectronica {
     Otros: Otros,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 struct Otros {
     OtroTexto: Vec<OtroTexto>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct ResumenFactura {
     CodigoTipoMoneda: CodigoTipoMoneda,
     #[serde(default)]
@@ -140,11 +142,11 @@ struct ResumenFactura {
     TotalComprobante: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct DetalleServicio {
     LineaDetalle: Vec<LineaDetalle>,
 }
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct LineaDetalle {
     NumeroLinea: String,
     #[serde(default)]
@@ -155,6 +157,7 @@ struct LineaDetalle {
     PrecioUnitario: String,
     MontoTotal: String,
     SubTotal: String,
+    #[serde(default)]
     Impuesto: Impuesto,
     #[serde(default)]
     ImpuestoNeto: String,
