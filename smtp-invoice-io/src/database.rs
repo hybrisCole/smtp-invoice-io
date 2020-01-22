@@ -29,3 +29,23 @@ pub async fn insert_many_factura(
     collection.insert_many(facturas_bson, None)?;
     Ok(1)
 }
+
+pub async fn insert_many_mensaje(
+    facturas: Vec<MensajeHacienda>,
+) -> Result<u8, mongodb::error::Error> {
+    let db = get_database().await?;
+    let collection = db.collection("mensaje_hacienda");
+    let mensaje_bson: Vec<_> = facturas
+        .into_iter()
+        .map(|x| {
+            let bson_data = bson::to_bson(&x).unwrap();
+            let mut doc = Document::new();
+            if let bson::Bson::Document(document) = bson_data {
+                doc = document;
+            }
+            doc
+        })
+        .collect();
+    collection.insert_many(mensaje_bson, None)?;
+    Ok(1)
+}

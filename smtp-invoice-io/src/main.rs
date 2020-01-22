@@ -37,11 +37,17 @@ fn main() -> io::Result<()> {
                     match xml_invoice::process(&list).await {
                         Ok(invoice_list) => {
                             println!("{:#?}", invoice_list);
-                            let invoice_list = invoice_list.0;
-                            if (invoice_list.len() > 0) {
-                                database::insert_many_factura(invoice_list)
+                            let factura_list = invoice_list.0;
+                            if (factura_list.len() > 0) {
+                                database::insert_many_factura(factura_list)
                                     .await
                                     .expect("Error inserting many factura");
+                            }
+                            let mensaje_list = invoice_list.1;
+                            if (mensaje_list.len() > 0) {
+                                database::insert_many_mensaje(mensaje_list)
+                                    .await
+                                    .expect("Error inserting many mensaje");
                             }
                         }
                         Err(e) => println!("Error getting xml invoices: {}", e),
