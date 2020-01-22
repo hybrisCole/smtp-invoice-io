@@ -8,14 +8,10 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4.10"
-tokio = { version = "0.2.6", features = ["full"] }
-native-tls = "0.2.3"
-async-native-tls="0.3.1"
-htmlescape="0.3.1"
-imap = "1.0.2"
+async-native-tls="0.3.2"
 async-imap="0.2.0"
 async-std="1.4.0"
-mailparse = "0.10.1"
+mailparse = "0.10.2"
 serde_derive="1.0.104"
 serde="1.0.104"
 serde-xml-rs="0.3.1"
@@ -24,5 +20,3 @@ sxd-document = "0.3.2"
 dotenv = "0.15.0"
 mongodb="0.9.0"
 bson="0.14.0"
-serde_json="1.0.44"
-tokio-postgres={version="0.5.1", features = ["with-chrono-0_4"]}

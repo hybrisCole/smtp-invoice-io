@@ -4,16 +4,11 @@ extern crate bson;
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
-extern crate htmlescape;
+extern crate mailparse;
 extern crate serde;
 extern crate serde_xml_rs as serde_xml;
-
-extern crate imap;
-extern crate mailparse;
-extern crate native_tls;
 extern crate sxd_document;
 extern crate sxd_xpath;
-extern crate tokio_postgres;
 
 use chrono::format::ParseError;
 use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime};
@@ -43,8 +38,10 @@ fn main() -> io::Result<()> {
                         Ok(invoice_list) => {
                             println!("{:#?}", invoice_list);
                             let invoice_list = invoice_list.0;
-                            if (invoice_list.len() > 0){
-                                database::insert_many_factura(invoice_list).await.expect("Error With Sample DB fn");
+                            if (invoice_list.len() > 0) {
+                                database::insert_many_factura(invoice_list)
+                                    .await
+                                    .expect("Error inserting many factura");
                             }
                         }
                         Err(e) => println!("Error getting xml invoices: {}", e),
